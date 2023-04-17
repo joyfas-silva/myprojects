@@ -7,6 +7,8 @@ public class MessageAlert {
 	private String type;
 	private String msg;
 	
+	public MessageAlert() {}
+	
 	public MessageAlert(AlertTypeEnum alertTypeEnum, String msg) {
 		this.type = alertTypeEnum.getType();
 		this.msg = msg;

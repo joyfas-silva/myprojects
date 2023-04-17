@@ -29,13 +29,13 @@ public class ProjetoService implements IProjetoService {
 	}
 
 	@Override
-	public Optional<Projeto> findById(Long id) throws MyProjectsException {
+	public Projeto findById(Long id) throws MyProjectsException {
 		Optional<Projeto> oProjeto = projetoRepository.findById(id);
 				
 		if(!oProjeto.isPresent())
 			throw new MyProjectsException("Projeto não encontrado!");
 		
-		return oProjeto;
+		return oProjeto.get();
 	}
 	
 	@Override
@@ -47,10 +47,10 @@ public class ProjetoService implements IProjetoService {
 	@Override
 	public void deleteById(Long id) throws MyProjectsException {
 		
-		Optional<Projeto> oProjeto = findById(id);
+		Projeto projeto = findById(id);
 		List<StatusEnum> enums = Arrays.asList(StatusEnum.INICIADO, StatusEnum.EM_ANDAMENTO, StatusEnum.ENCERRADO);
 		
-		if(enums.contains(oProjeto.get().getStatus()))
+		if(enums.contains(projeto.getStatus()))
 			throw new MyProjectsException("Projeto não pode ser excluído!");
 			
 		projetoRepository.deleteById(id);

@@ -30,17 +30,17 @@ public class ProjetoController {
 	private IPessoaService pessoaService;
 	
 	@GetMapping("/listar")
-	public String home(Model model) {
+	public String listar(Model model) {
 		model.addAttribute("projetos", projetoService.findAll());
 		return "/pages/index";
 	}
 	
 	@PostMapping("/cadastro")
-	public String novo(Long id, Model model, RedirectAttributes redirectAttributes) {
+	public String cadastro(Long id, Model model, RedirectAttributes redirectAttributes) {
 		
 		if(id != null) {
 			try {
-				addAttrs(model, projetoService.findById(id).get());
+				addAttrs(model, projetoService.findById(id));
 			} catch (MyProjectsException e) {
 				setMessage(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 			} catch (Exception e) {
@@ -75,7 +75,7 @@ public class ProjetoController {
 		
 		try {
 			model.addAttribute("consultar", true);
-			addAttrs(model, projetoService.findById(id).get());
+			addAttrs(model, projetoService.findById(id));
 		} catch (MyProjectsException e) {
 			setMessage(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 		} catch (Exception e) {
@@ -85,8 +85,8 @@ public class ProjetoController {
 		return "/pages/projeto/cadastro";
 	}
 
-	@PostMapping("/delete")
-	public String delete(Long id, Model model, RedirectAttributes redirectAttributes) {
+	@PostMapping("/deletar")
+	public String deletar(Long id, Model model, RedirectAttributes redirectAttributes) {
 		
 		try {
 			projetoService.deleteById(id);

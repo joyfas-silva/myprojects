@@ -91,7 +91,7 @@
 	exclusaoModal.addEventListener('show.bs.modal', event => {
 	  const recipient = event.relatedTarget.getAttribute('data-bs-whatever');
 	  const btnSim = exclusaoModal.querySelector('#btnSim');
-	  btnSim.setAttribute("onclick", 'go("delete",' + recipient +')');
+	  btnSim.setAttribute("onclick", 'go("deletar",' + recipient +')');
 	})
 
 	function go(acao, id) {

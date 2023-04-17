@@ -35,13 +35,13 @@ public class PessoaController {
 		return new ResponseEntity<>(pessoaService.listFuncs(), HttpStatus.OK);
 	}
 
-	@PostMapping("/save")
+	@PostMapping("/salvar")
 	public ResponseEntity<Pessoa> save(@RequestBody Pessoa pessoa) {
 		
 		return new ResponseEntity<>(pessoaService.save(pessoa), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deletar/{id}")
 	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") Long id) {
 		try {
 			pessoaService.deleteById(id);
