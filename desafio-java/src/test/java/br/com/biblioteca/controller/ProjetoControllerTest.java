@@ -50,6 +50,9 @@ public class ProjetoControllerTest {
 	@Mock
 	RedirectAttributes redirectAttribute;
 	
+	private Long id = 1l;
+	Projeto projeto = new Projeto();
+	
 	@Test
 	public void listar() throws Exception {
 		mockMvc.perform(get("/listar"))
@@ -67,7 +70,6 @@ public class ProjetoControllerTest {
 	@Test
 	public void cadastro2() throws MyProjectsException{
 		
-		Long id = 1l;
 		when(projetoService.findById(id)).thenThrow(new MyProjectsException("Test"));
 		controller.cadastro(id, model, redirectAttribute);
 	}
@@ -75,7 +77,6 @@ public class ProjetoControllerTest {
 	@Test
 	public void cadastro3() throws MyProjectsException{
 		
-		Long id = 1l;
 		when(projetoService.findById(id)).thenThrow(new NullPointerException("Test"));
 		controller.cadastro(id, model, redirectAttribute);
 	}
@@ -83,16 +84,13 @@ public class ProjetoControllerTest {
 	@Test
 	public void cadastro4() throws MyProjectsException{
 		
-		Long id = 1l;
-		Projeto projeto = new Projeto();
-		
 		when(projetoService.findById(id)).thenReturn(projeto);
 		controller.cadastro(id, model, redirectAttribute);
 	}
 	
 	@Test
 	public void salvar() throws Exception {
-		mockMvc.perform(post("/salvar", new Projeto()))
+		mockMvc.perform(post("/salvar", projeto))
 		.andDo(print())
 		.andExpect(flash().attributeExists("msgs"))
 		.andExpect(status().isFound())
@@ -100,10 +98,38 @@ public class ProjetoControllerTest {
 	}
 	
 	@Test
+	public void salvar2() throws MyProjectsException{
+		
+		when(projetoService.save(projeto)).thenReturn(projeto);
+		controller.salvar(model, projeto, redirectAttribute);
+	}
+	
+	@Test
 	public void consultar() throws Exception {
 		mockMvc.perform(post("/consultar"))
 		.andDo(print())
 		.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void consultar2() throws MyProjectsException{
+		
+		when(projetoService.findById(id)).thenThrow(new MyProjectsException("Test"));
+		controller.consultar(id, model, redirectAttribute);
+	}
+	
+	@Test
+	public void consultar3() throws MyProjectsException{
+		
+		when(projetoService.findById(id)).thenThrow(new NullPointerException("Test"));
+		controller.consultar(id, model, redirectAttribute);
+	}
+	
+	@Test
+	public void consultar4() throws MyProjectsException{
+		
+		when(projetoService.findById(id)).thenReturn(projeto);
+		controller.consultar(id, model, redirectAttribute);
 	}
 	
 	@Test
@@ -117,7 +143,6 @@ public class ProjetoControllerTest {
 	@Test
 	public void deletar2() throws MyProjectsException{
 		
-		Long id = 1l;
 		doThrow(new MyProjectsException("Test")).when(projetoService).deleteById(id);
 		controller.deletar(id, model, redirectAttribute);
 	}
@@ -125,7 +150,6 @@ public class ProjetoControllerTest {
 	@Test
 	public void deletar3() throws MyProjectsException{
 		
-		Long id = 1l;
 		doNothing().when(projetoService).deleteById(id);
 		controller.deletar(id, model, redirectAttribute);
 	}
