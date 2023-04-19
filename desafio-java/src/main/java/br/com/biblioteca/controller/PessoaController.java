@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.biblioteca.dto.PessoaDTO;
 import br.com.biblioteca.model.Pessoa;
 import br.com.biblioteca.service.IPessoaService;
 
@@ -36,9 +37,9 @@ public class PessoaController {
 	}
 
 	@PostMapping("/salvar")
-	public ResponseEntity<Pessoa> save(@RequestBody Pessoa pessoa) {
+	public ResponseEntity<Pessoa> save(@RequestBody PessoaDTO dto) {
 		
-		return new ResponseEntity<>(pessoaService.save(pessoa), HttpStatus.OK);
+		return new ResponseEntity<>(pessoaService.save(Pessoa.toEntity(dto)), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/deletar/{id}")

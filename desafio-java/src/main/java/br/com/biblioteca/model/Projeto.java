@@ -17,8 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
+import br.com.biblioteca.dto.ProjetoDTO;
 import br.com.biblioteca.enums.RiscoEnum;
 import br.com.biblioteca.enums.StatusEnum;
 
@@ -34,15 +33,12 @@ public class Projeto {
 	private String nome;
 	
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataInicio;
 	
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataPrevisaoFim;
 	
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataFim;
 	
 	@Column
@@ -165,5 +161,39 @@ public class Projeto {
 
 	public void setMembros(List<Pessoa> membros) {
 		this.membros = membros;
+	}
+	
+	public ProjetoDTO toDTO() {
+		ProjetoDTO dto = new ProjetoDTO();
+		dto.setId(this.getId());
+		dto.setNome(this.getNome());
+		dto.setGerente(this.getGerente());
+		dto.setDataInicio(this.getDataInicio());
+		dto.setDataFim(this.getDataFim());
+		dto.setDataPrevisaoFim(this.getDataPrevisaoFim());
+		dto.setMembros(this.getMembros());
+		dto.setRisco(this.getRisco());
+		dto.setStatus(this.getStatus());
+		dto.setDescricao(this.getDescricao());
+		dto.setOrcamento(this.getOrcamento());
+		
+		return dto;
+	}
+
+	public static Projeto toEntity(ProjetoDTO dto) {
+		Projeto entity = new Projeto();
+		entity.setId(dto.getId());
+		entity.setNome(dto.getNome());
+		entity.setDataInicio(dto.getDataInicio());
+		entity.setDataPrevisaoFim(dto.getDataPrevisaoFim());
+		entity.setDataFim(dto.getDataFim());
+		entity.setDescricao(dto.getDescricao());
+		entity.setStatus(dto.getStatus());
+		entity.setOrcamento(dto.getOrcamento());
+		entity.setRisco(dto.getRisco());
+		entity.setGerente(dto.getGerente());
+		entity.setMembros(dto.getMembros());
+		
+		return entity;
 	}
 }

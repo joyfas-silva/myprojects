@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.biblioteca.dto.ProjetoDTO;
 import br.com.biblioteca.enums.AlertTypeEnum;
 import br.com.biblioteca.enums.RiscoEnum;
 import br.com.biblioteca.enums.StatusEnum;
@@ -29,6 +30,9 @@ public class ProjetoController {
 	@Autowired
 	private IPessoaService pessoaService;
 	
+	private static  final String ERRO_SYS = "Erro de sistema: ";
+	private static  final String REDIRECT_LISTAR = "redirect:/listar";
+	
 	@GetMapping("/listar")
 	public String listar(Model model) {
 		model.addAttribute("projetos", projetoService.findAll());
@@ -36,53 +40,55 @@ public class ProjetoController {
 	}
 	
 	@PostMapping("/cadastro")
-	public String cadastro(Long id, Model model, RedirectAttributes redirectAttributes) {
+	public String cadastro(ProjetoDTO projeto, Model model, RedirectAttributes redirectAttributes) {
+		String str = REDIRECT_LISTAR;
 		
-		if(id != null) {
+		if(projeto.getId() != null) {
 			try {
-				addAttrs(model, projetoService.findById(id));
+				addAttrs(model, projetoService.findById(projeto.getId()).toDTO());
+				str = "/pages/projeto/cadastro";
 			} catch (MyProjectsException e) {
-				setMessage(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
+				setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 			} catch (Exception e) {
-				setMessage(redirectAttributes, AlertTypeEnum.DANGER, "Erro de sistema: ".concat(e.getMessage()));
+				setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, ERRO_SYS.concat(e.getMessage()));
 			}
 		}else {
-			Projeto projeto = new Projeto();
 			projeto.setStatus(StatusEnum.PLANEJADO);
 			projeto.setDataInicio(new Date());
 			
 			addAttrs(model, projeto);
 		}
 		
-		return "/pages/projeto/cadastro";
+		return str;
 	}
 	
 	@PostMapping("/salvar")
-	public String salvar(Model model, @Valid Projeto projeto, RedirectAttributes redirectAttributes) {
-		
+	public String salvar(Model model, @Valid ProjetoDTO projeto, RedirectAttributes redirectAttributes) {
 		try {
-			projetoService.save(projeto);
-			setMessage(redirectAttributes, AlertTypeEnum.SUCCESS, "Operação realizada com sucesso!");
+			projetoService.save(Projeto.toEntity(projeto));
+			setMessageRedirect(redirectAttributes, AlertTypeEnum.SUCCESS, "Operação realizada com sucesso!");
 		} catch (Exception e) {
-			setMessage(redirectAttributes, AlertTypeEnum.DANGER, "Erro de sistema: ".concat(e.getMessage()));
+			model.addAttribute("msgs", Arrays.asList(new MessageAlert(AlertTypeEnum.DANGER, ERRO_SYS.concat(e.getMessage()))));
+			return cadastro(projeto, model, redirectAttributes);
 		}
 		
-		return "redirect:/listar";
+		return REDIRECT_LISTAR;
 	}
 	
 	@PostMapping("/consultar")
 	public String consultar(Long id, Model model, RedirectAttributes redirectAttributes) {
-		
+		String str = REDIRECT_LISTAR;
 		try {
 			model.addAttribute("consultar", true);
-			addAttrs(model, projetoService.findById(id));
+			addAttrs(model, projetoService.findById(id).toDTO());
+			str = "/pages/projeto/cadastro";
 		} catch (MyProjectsException e) {
-			setMessage(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
+			setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 		} catch (Exception e) {
-			setMessage(redirectAttributes, AlertTypeEnum.DANGER, "Erro de sistema: ".concat(e.getMessage()));
+			setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, ERRO_SYS.concat(e.getMessage()));
 		}
 		
-		return "/pages/projeto/cadastro";
+		return str;
 	}
 
 	@PostMapping("/deletar")
@@ -90,17 +96,17 @@ public class ProjetoController {
 		
 		try {
 			projetoService.deleteById(id);
-			setMessage(redirectAttributes, AlertTypeEnum.SUCCESS, "Exclusão realizada com sucesso!");
+			setMessageRedirect(redirectAttributes, AlertTypeEnum.SUCCESS, "Exclusão realizada com sucesso!");
 		} catch (MyProjectsException e) {
-			setMessage(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
+			setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 		} catch (Exception e) {
-			setMessage(redirectAttributes, AlertTypeEnum.DANGER, "Erro de sistema: ".concat(e.getMessage()));
+			setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, ERRO_SYS.concat(e.getMessage()));
 		}
 		
-		return "redirect:/listar";
+		return REDIRECT_LISTAR;
 	}
 	
-	private void addAttrs(Model model, Projeto projeto) {
+	private void addAttrs(Model model, ProjetoDTO projeto) {
 		
 		model.addAttribute("gerentes", pessoaService.listGerentes());
 		model.addAttribute("funcs", pessoaService.listFuncs());
@@ -109,7 +115,7 @@ public class ProjetoController {
 		model.addAttribute("projeto", projeto);
 	}
 	
-	private RedirectAttributes setMessage(RedirectAttributes redirectAttributes, AlertTypeEnum alertTypeEnum, String msg) {
-		return redirectAttributes.addFlashAttribute("msgs", Arrays.asList(new MessageAlert(alertTypeEnum, msg)));
+	private void setMessageRedirect(RedirectAttributes redirectAttributes, AlertTypeEnum alertTypeEnum, String msg) {
+		redirectAttributes.addFlashAttribute("msgs", Arrays.asList(new MessageAlert(alertTypeEnum, msg)));
 	}
 }

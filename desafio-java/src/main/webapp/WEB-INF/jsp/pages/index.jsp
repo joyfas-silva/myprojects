@@ -14,7 +14,7 @@
 	<table class="table table-hover" id="tblProjetos">
 		<thead>
 			<tr>
-				<th scope="col" width="40%">Nome</th>
+				<th scope="col" style="width: 40%">Nome</th>
 				<th scope="col">Status</th>
 				<th scope="col">Orçamento</th>
 				<th scope="col">Risco</th>

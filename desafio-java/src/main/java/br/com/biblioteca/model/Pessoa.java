@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import br.com.biblioteca.dto.PessoaDTO;
+
 @Entity
 @Table
 public class Pessoa {
@@ -67,5 +69,27 @@ public class Pessoa {
 
 	public void setFuncionario(Boolean funcionario) {
 		this.funcionario = funcionario;
+	}
+	
+	public PessoaDTO toDTO() {
+		PessoaDTO dto = new PessoaDTO();
+		dto.setId(this.getId());
+		dto.setNome(this.getNome());
+		dto.setDataNascimento(this.getDataNascimento());
+		dto.setCpf(this.getCpf());
+		dto.setFuncionario(this.getFuncionario());
+		
+		return dto;
+	}
+	
+	public static Pessoa toEntity(PessoaDTO dto) {
+		Pessoa pessoa = new Pessoa();
+		pessoa.setId(dto.getId());
+		pessoa.setNome(dto.getNome());
+		pessoa.setDataNascimento(dto.getDataNascimento());
+		pessoa.setCpf(dto.getCpf());
+		pessoa.setFuncionario(dto.getFuncionario());
+		
+		return pessoa;
 	}
 }
