@@ -43,7 +43,7 @@ public class PessoaController {
 	}
 
 	@DeleteMapping("/deletar/{id}")
-	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") Long id) {
+	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
 			pessoaService.deleteById(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
