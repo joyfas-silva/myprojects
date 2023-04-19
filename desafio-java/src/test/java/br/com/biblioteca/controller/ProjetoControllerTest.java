@@ -71,7 +71,7 @@ public class ProjetoControllerTest {
 		
 		mockMvc.perform(post("/cadastro"))
 		.andDo(print())
-		.andExpect(status().isFound());
+		.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -83,7 +83,7 @@ public class ProjetoControllerTest {
 		
 		mockMvc.perform(post("/cadastro"))
 		.andDo(print())
-		.andExpect(status().isFound());
+		.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -95,7 +95,7 @@ public class ProjetoControllerTest {
 		
 		mockMvc.perform(post("/cadastro"))
 		.andDo(print())
-		.andExpect(status().isFound());
+		.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -106,8 +106,8 @@ public class ProjetoControllerTest {
 		
 		mockMvc.perform(post("/salvar", projeto))
 		.andDo(print())
-		.andExpect(status().isFound())
-		.andExpect(redirectedUrl("/listar"));
+		.andExpect(status().isOk())
+		.andExpect(redirectedUrl(null));
 	}
 	
 	@Test

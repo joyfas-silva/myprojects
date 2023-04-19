@@ -32,6 +32,7 @@ public class ProjetoController {
 	
 	private static  final String ERRO_SYS = "Erro de sistema: ";
 	private static  final String REDIRECT_LISTAR = "redirect:/listar";
+	private static  final String REDIRECT_CADASTRO = "/pages/projeto/cadastro";
 	
 	@GetMapping("/listar")
 	public String listar(Model model) {
@@ -46,7 +47,7 @@ public class ProjetoController {
 		if(projeto.getId() != null) {
 			try {
 				addAttrs(model, projetoService.findById(projeto.getId()).toDTO());
-				str = "/pages/projeto/cadastro";
+				str = REDIRECT_CADASTRO;
 			} catch (MyProjectsException e) {
 				setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 			} catch (Exception e) {
@@ -57,6 +58,7 @@ public class ProjetoController {
 			projeto.setDataInicio(new Date());
 			
 			addAttrs(model, projeto);
+			str = REDIRECT_CADASTRO;
 		}
 		
 		return str;
@@ -81,7 +83,7 @@ public class ProjetoController {
 		try {
 			model.addAttribute("consultar", true);
 			addAttrs(model, projetoService.findById(id).toDTO());
-			str = "/pages/projeto/cadastro";
+			str = REDIRECT_CADASTRO;
 		} catch (MyProjectsException e) {
 			setMessageRedirect(redirectAttributes, AlertTypeEnum.DANGER, e.getMessage());
 		} catch (Exception e) {
